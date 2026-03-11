@@ -8,7 +8,7 @@ import string
 from datetime import datetime
 
 # ========== КОНФИГУРАЦИЯ ==========
-SESSION_STRING = os.environ.get('SESSION_STRING')
+SESSION_STRING = os.environ.get('SESSION_STRING')  # ИСПРАВЛЕНО: было SESSION_STRING_G
 API_ID = int(os.environ.get('API_ID'))
 API_HASH = os.environ.get('API_HASH')
 
@@ -83,7 +83,7 @@ async def save_gift(event, user_id, message):
 `{gift_key}`
 
 📋 Отправь этот ключ тому, кто хочет забрать подарок.
-Он напишет боту: /getgift {gift_key}
+Он напишет: /getgift {gift_key}
 
 /mykeys - посмотреть все ключи
 """)

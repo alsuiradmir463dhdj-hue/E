@@ -1,35 +1,24 @@
-import asyncio
-from telethon import TelegramClient, events
-from telethon.sessions import StringSession
-import os
+name: Bot 24/7
 
-# ========== КОНФИГУРАЦИЯ ==========
-SESSION_STRING = os.environ.get('SESSION_STRING')
-API_ID = int(os.environ.get('API_ID'))
-API_HASH = os.environ.get('API_HASH')
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
 
-print("🔑 Длина SESSION_STRING:", len(SESSION_STRING) if SESSION_STRING else "None")
-print("📊 Первые 50 символов:", SESSION_STRING[:50] if SESSION_STRING else "None")
-
-try:
-    client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
-    print("✅ Клиент создан")
-except Exception as e:
-    print(f"❌ Ошибка создания клиента: {e}")
-    exit(1)
-
-@client.on(events.NewMessage(incoming=True))
-async def handler(event):
-    if event.message.message and "рынка" in event.message.message.lower():
-        await event.reply("Отправляй подарок! 🎁")
-        print(f"✅ Ответил {event.sender_id}")
-
-async def main():
-    await client.start()
-    me = await client.get_me()
-    print(f"✅ Успешный вход! Аккаунт: @{me.username}")
-    print("🤖 Бот слушает сообщения...")
-    await client.run_until_disconnected()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install
+        run: pip install telethon==1.34.0
+      - name: Run
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+        run: python bot_manager.py

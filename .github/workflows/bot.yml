@@ -9,13 +9,14 @@ jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # обновлено с v2 до v4
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v5  # обновлено с v2 до v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
       - name: Install dependencies
-        run: pip install telethon
+        run: |
+          pip install telethon==1.34.0
       - name: Run bot
         env:
           SESSION_STRING: ${{ secrets.SESSION_STRING }}
